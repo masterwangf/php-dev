@@ -48,5 +48,5 @@ RUN pecl install xdebug-2.7.2 && docker-php-ext-enable xdebug
 
 # 镜像信息
 LABEL Author="fei"
-LABEL Version="2020.11"
+LABEL Version="2021.02"
 LABEL Description="PHP5.6开发环境镜像."

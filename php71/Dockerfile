@@ -1,17 +1,17 @@
 FROM php:7.1-fpm
 
 # 更新为国内镜像
-# RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak \
-#     && echo 'deb http://mirrors.163.com/debian/ stretch main non-free contrib' > /etc/apt/sources.list \
-#     && echo 'deb http://mirrors.163.com/debian/ stretch-updates main non-free contrib' >> /etc/apt/sources.list \
-#     && echo 'deb http://mirrors.163.com/debian-security/ stretch/updates main non-free contrib' >> /etc/apt/sources.list \
-#     && apt-get update
-
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak \
-    && echo 'deb http://mirrors.aliyun.com/debian stretch main' > /etc/apt/sources.list \
-    && echo 'deb http://mirrors.aliyun.com/debian stretch-updates main' >> /etc/apt/sources.list \
-    && echo 'deb http://mirrors.aliyun.com/debian-security stretch/updates main' >> /etc/apt/sources.list \
-    && apt-get update 
+    && echo 'deb http://mirrors.163.com/debian/ stretch main non-free contrib' > /etc/apt/sources.list \
+    && echo 'deb http://mirrors.163.com/debian/ stretch-updates main non-free contrib' >> /etc/apt/sources.list \
+    && echo 'deb http://mirrors.163.com/debian-security/ stretch/updates main non-free contrib' >> /etc/apt/sources.list \
+    && apt-get update
+
+# RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak \
+#     && echo 'deb http://mirrors.aliyun.com/debian stretch main' > /etc/apt/sources.list \
+#     && echo 'deb http://mirrors.aliyun.com/debian stretch-updates main' >> /etc/apt/sources.list \
+#     && echo 'deb http://mirrors.aliyun.com/debian-security stretch/updates main' >> /etc/apt/sources.list \
+#     && apt-get update 
 
 # RUN apt-get update && apt-get upgrade
 RUN apt-get install -y --allow-remove-essential libtinfo5 wget vim
@@ -35,11 +35,11 @@ RUN apt-get install -y --no-install-recommends --allow-downgrades zlib1g=1:1.2.8
 #     && mv /etc/apt/sources.list.bak /etc/apt/sources.list \
 #     && apt-get update
 # imagick 扩展
-# RUN export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
-    # && apt-get install -y  imagemagick \
-	# && rm -r /var/lib/apt/lists/* \
-    # && pecl install imagick-3.4.4 \
-    # && docker-php-ext-enable imagick
+# RUN apt-get update \
+#     && apt-get install -y --allow-downgrades imagemagick libmagickcore-6.q16-dev=8:6.9.7.4+dfsg-11+deb9u11 libmagickwand-6.q16-dev=8:6.9.7.4+dfsg-11+deb9u11 libmagick++-6.q16-dev \
+# 	&& rm -r /var/lib/apt/lists/* \
+#     && pecl install imagick \
+#     && docker-php-ext-enable imagick
 
 # mcrypt 扩展
 # RUN pecl install mcrypt-1.0.2 \
@@ -59,10 +59,10 @@ RUN apt-get install -y --no-install-recommends --allow-downgrades zlib1g=1:1.2.8
 #RUN pecl install xdebug-2.7.2 && docker-php-ext-enable xdebug
 
 # swoole 扩展
-RUN pecl install swoole && docker-php-ext-enable swoole
+# RUN pecl install swoole && docker-php-ext-enable swoole
 
 # 镜像信息
 LABEL Author="fei"
-LABEL Version="2020.12"
+LABEL Version="2021.02"
 LABEL Description="PHP7.1开发环境镜像."
 
