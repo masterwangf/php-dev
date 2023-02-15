@@ -1,0 +1,126 @@
+version: "3"
+services: 
+  nginx:
+    build: ./services/nginx
+    # image: nginx:1.22
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+    tty: true
+    env_file:
+      - ./.env
+    volumes:
+      - ${WORK_DIR}:/var/www
+      - ./services/nginx/logs:/var/log/nginx
+      - ./services/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./services/nginx/conf.d:/etc/nginx/conf.d
+      - ./www:/usr/share/nginx/html
+    environment:
+      - TZ=Asia/Shanghai
+    networks:
+      - php_dev_network
+
+  php71:
+    build: ./services/php71
+    container_name: php71
+    restart: always
+    tty: true
+    env_file:
+      - ./.env
+    volumes:
+      - ${WORK_DIR}:/var/www
+      - ./services/php71/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf
+      - ./services/php71/logs:/var/log/php
+    environment:
+      user: www-data
+      group: www-data
+      TZ: Asia/Shanghai
+    networks:
+      - php_dev_network
+
+  php74:
+    build: ./services/php74
+    container_name: php74
+    restart: always
+    tty: true
+    env_file:
+      - ./.env
+    volumes:
+      - ${WORK_DIR}:/var/www
+      - ./services/php74/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf
+      - ./services/php74/logs:/var/log/php
+    environment:
+      user: www-data
+      group: www-data
+    networks:
+      - php_dev_network
+  
+  php73:
+    build: ./services/php73
+    container_name: php73
+    restart: always
+    tty: true
+    env_file:
+      - ./.env
+    volumes:
+      - ${WORK_DIR}:/var/www
+      - ./services/php73/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf
+      - ./services/php73/logs:/var/log/php
+    environment:
+      user: www-data
+      group: www-data
+    networks:
+      - php_dev_network
+  
+  mysql57:
+    image: mysql:5.7
+    container_name: mysql57
+    restart: always
+    ports:
+     - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      TZ: Asia/Shanghai
+    volumes:
+    - ./services/mysql57/data:/var/lib/mysql
+    - ./services/mysql57/conf/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - php_dev_network
+
+  redis6:
+    image: redis:6.2.7
+    container_name: redis6
+    restart: always
+    ports:
+      - "6379:6379"
+    privileged: true
+    command: redis-server /etc/redis.conf
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./services/redis6/redis.conf:/etc/redis.conf
+      - ./services/redis6/data:/data
+    networks:
+      - php_dev_network
+
+  mongodb5:
+    image: mongo:5.0.9
+    container_name: mongodb5
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+      - MONGO_INITDB_DATABASE=stream_media_assets
+    volumes:
+      - ./services/mongodb5/data:/data/db
+      - ./services/mongodb5/init/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    networks:
+      - php_dev_network
+
+networks:
+  php_dev_network:
+    driver: bridge
